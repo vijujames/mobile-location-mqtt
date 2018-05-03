@@ -1,0 +1,57 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "locationApplication": {
+      "Type": "AWS::ElasticBeanstalk::Application",
+      "Properties": {
+        "ApplicationName": "MobileLocationApplication",
+        "Description": "AWS Elastic Beanstalk Mobile Location Application"
+      }
+    },
+    "locationApplicationVersion": {
+      "Type": "AWS::ElasticBeanstalk::ApplicationVersion",
+      "Properties": {
+        "ApplicationName": { "Ref": "locationApplication" },
+        "Description": "AWS ElasticBeanstalk Mobile Location Application Version",
+        "SourceBundle": {
+          "S3Bucket": { "Fn::Join": [ "-", [ "elasticbeanstalk-locationapp", { "Ref": "AWS::Region" } ] ] },
+          "S3Key": "location-0.0.1.jar"
+        }
+      }
+    },
+    "appConfigurationTemplate": {
+      "Type": "AWS::ElasticBeanstalk::ConfigurationTemplate",
+      "Properties": {
+        "ApplicationName": { "Ref": "locationApplication" },
+        "Description": "AWS ElasticBeanstalk Mobile Location Configuration Template",
+        "OptionSettings": [
+          {
+            "Namespace": "aws:autoscaling:asg",
+            "OptionName": "MinSize",
+            "Value": "1"
+          },
+          {
+            "Namespace": "aws:autoscaling:asg",
+            "OptionName": "MaxSize",
+            "Value": "1"
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:environment",
+            "OptionName": "EnvironmentType",
+            "Value": "LoadBalanced"
+          }
+        ],
+        "SolutionStackName": "64bit Amazon Linux 2017.09 v2.6.8 running Java 8"
+      }
+    },
+    "locationApplicationEnvironment": {
+      "Type": "AWS::ElasticBeanstalk::Environment",
+      "Properties": {
+        "ApplicationName": { "Ref": "locationApplication" },
+        "Description": "AWS ElasticBeanstalk Mobile Location Environment",
+        "TemplateName": { "Ref": "appConfigurationTemplate" },
+        "VersionLabel": { "Ref": "locationApplicationVersion" }
+      }
+    }
+  }
+}

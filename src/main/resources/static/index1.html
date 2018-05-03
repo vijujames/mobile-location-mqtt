@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Live Mobile Location</title>
+
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1.11.2/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.css' rel='stylesheet' />
+
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:relative; top:10; bottom:10; height:500px; }
+    </style>
+
+</head>
+
+<body>
+<div>
+    <h3>Location:</h3>
+    <ol id="coordinates"></ol>
+</div>
+<div id='map'></div>
+
+
+<script type="text/javascript">
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoidmlqdWoiLCJhIjoiY2pncHAya3I2MGtyZjMzcG5jdm92c2dtaSJ9.GmmcNtf1nbUQxNJsnW5Mow';
+    var map = new mapboxgl.Map({
+        container: 'map', // container id
+        style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location
+        center: [-74.50, 40], // starting position [lng, lat]
+        zoom: 10 // starting zoom
+    });
+
+    // create a GeoJSON point to serve as a starting point
+    var point = {
+        "type": "Point",
+        "coordinates": [-74.50, 40]
+    };
+
+    function setPosition(lon, lat) {
+        point.coordinates[0] = lon;
+        point.coordinates[1] = lat;
+        map.getSource('drone').setData(point);
+        map.setCenter(point.coordinates);
+    }
+
+    map.on('load', function () {
+        // add the GeoJSON above to a new vector tile source
+        map.addSource('drone', { type: 'geojson', data: point });
+
+        map.addLayer({
+            "id": "drone-glow-strong",
+            "type": "circle",
+            "source": "drone",
+            "paint": {
+                "circle-radius": 10,
+                "circle-color": "#0000ff",
+                "circle-opacity": 0.6
+            }
+        });
+    });
+
+
+
+    $(document).ready(function() {
+        var messageList = $("#coordinates");
+        // new connection to the WebSocket endpoint
+        var socket = new SockJS('/locdata');
+        var stompClient = Stomp.over(socket);
+        stompClient.connect({ }, function(frame) {
+            // subscribe to /topic/location endpoint
+            stompClient.subscribe("/topic/location", function(data) {
+                var message = JSON.parse(data.body);
+                var latitude = message.lat;
+                var longitude = message.lon;
+                messageList.append("<li> Latitude=" + latitude + " Longitude=" + longitude + "</li>");
+                setPosition(longitude, latitude);
+            });
+        });
+    });
+</script>
+
+</body>
+
+</html>

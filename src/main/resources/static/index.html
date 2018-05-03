@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="locationApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Live Mobile Location</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1.11.2/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <script type="text/javascript" src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.css' rel='stylesheet' />
+
+    <script type="text/javascript" src="js/locationApp.js"></script>
+    <script type="text/javascript" src="js/locationController.js"></script>
+    <link href='css/location.css' rel='stylesheet' />
+
+</head>
+
+<body ng-controller="LocationController">
+
+    <div class="row">
+        <div class="column left">
+            <h2>Location</h2>
+            <ul id="location_list">
+                <li ng-repeat="loc in locationList track by $index"> {{loc}} </li>
+            </ul>
+        </div>
+        <div class="column right">
+            <div id='locationmap'></div>
+        </div>
+    </div>
+
+</body>
+
+</html>

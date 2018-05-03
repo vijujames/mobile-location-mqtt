@@ -1,0 +1,22 @@
+body {
+    margin:10;
+    padding:10;
+}
+
+.column {
+    float: left;
+}
+
+.left {
+    width: 25%;
+}
+
+.right {
+    width: 75%;
+}
+
+#locationmap {
+    height: 500px;
+    width: 100%;
+    position: static;
+}
