@@ -16,7 +16,7 @@ import java.util.List;
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     // WebSocket end point
-    private static final String LOCATION_WS_ENDPOINT = "/locdata";
+    private static final String WEBSOCKET_ENDPOINT = "/locationendpoint";
 
     /**
      * This is to enable a simple message broker and to configure
@@ -34,7 +34,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
      */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint(LOCATION_WS_ENDPOINT).withSockJS();
+        registry.addEndpoint(WEBSOCKET_ENDPOINT).withSockJS();
     }
 
     @Override

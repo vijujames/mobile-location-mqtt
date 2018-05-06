@@ -72,7 +72,7 @@
     $(document).ready(function() {
         var messageList = $("#coordinates");
         // new connection to the WebSocket endpoint
-        var socket = new SockJS('/locdata');
+        var socket = new SockJS('/locationendpoint');
         var stompClient = Stomp.over(socket);
         stompClient.connect({ }, function(frame) {
             // subscribe to /topic/location endpoint

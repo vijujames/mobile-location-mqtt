@@ -44,7 +44,8 @@ public class LocationApplication {
     @Value( "${cloudmqtt.topic}" )
     private String cloudmqttTopic;
 
-    private static final String LOCATION_ENDPOINT = "/topic/location";
+    // Topic for websocket communication
+    private static final String WEBSOCKET_TOPIC = "/topic/location";
 
 	public static void main(String[] args) {
 		SpringApplication.run(LocationApplication.class, args);
@@ -87,8 +88,8 @@ public class LocationApplication {
 			public void handleMessage(Message<?> message) throws MessagingException {
 			    String payload = (String) message.getPayload();
 				System.out.println(payload);
-                // send it to websocket endpoint
-				template.convertAndSend(LOCATION_ENDPOINT, payload);
+                // send it over websocket
+				template.convertAndSend(WEBSOCKET_TOPIC, payload);
 			}
 
 		};

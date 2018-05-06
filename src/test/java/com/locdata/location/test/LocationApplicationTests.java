@@ -37,14 +37,18 @@ public class LocationApplicationTests {
 	private int port;
 	private String URL;
 
-	private static final String LOCATION_ENDPOINT = "/topic/location/";
+	// Topic for websocket communication
+	private static final String WEBSOCKET_TOPIC = "/topic/location/";
+
+	// WebSocket end point
+	private static final String WEBSOCKET_ENDPOINT = "/locationendpoint";
 
 	private CompletableFuture<String> completableFuture;
 
 	@Before
 	public void setup() {
 		completableFuture = new CompletableFuture<>();
-		URL = "ws://localhost:" + port + "/locdata";
+		URL = "ws://localhost:" + port + WEBSOCKET_ENDPOINT;
 	}
 
 	@Test
@@ -58,8 +62,8 @@ public class LocationApplicationTests {
 		StompSession stompSession = stompClient.connect(URL, new StompSessionHandlerAdapter() {
 		}).get(1, SECONDS);
 
-		stompSession.subscribe(LOCATION_ENDPOINT, new LocationStompFrameHandler());
-		stompSession.send(LOCATION_ENDPOINT, "Test Data");
+		stompSession.subscribe(WEBSOCKET_TOPIC, new LocationStompFrameHandler());
+		stompSession.send(WEBSOCKET_TOPIC, "Test Data");
 
 		String locationData = completableFuture.get(10, SECONDS);
 
