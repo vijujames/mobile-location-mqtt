@@ -9,5 +9,6 @@ app.run([function () {
 app.constant('config',
     {
         locationTopic: "/topic/location",
-        locationEndpoint: "/locdata"
+        locationEndpoint: "/locdata",
+        locationImage: 'img/icons8-gps-100.png'
     });
